@@ -6,12 +6,16 @@
 #include <print>
 
 
-void Terminal::setCanonical(const int &cmd)
+void Terminal::setCanonicalAndCursor(const int &cmd)
 {
+    /* canonical changes */
     tcgetattr(STDIN_FILENO, &tio); // get current terminal setting
     if (cmd == 0) {tio.c_lflag &= (~ICANON & ~ECHO);} // disable canonical mode
     else if (cmd == 1) {tio.c_lflag |= (ICANON | ECHO);} // enable canonical mode
     tcsetattr(STDIN_FILENO,TCSANOW, &tio); // apply changes
+    
+    /* cursor changes */
+    cmd == 1 ? std::print("\033[?25h") : std::print("\033[?25l");
 }
 
 void Terminal::print(const std::string &str, const int &x, const int &y)
@@ -20,12 +24,9 @@ void Terminal::print(const std::string &str, const int &x, const int &y)
     std::print("{}", str); // then print
 }
 
-void Terminal::setCursor(const int &cmd)
-{
-    cmd == 1 ? std::print("\033[?25h") : std::print("\033[?25l");
-}
 
 void Terminal::clear()
 {
-    std::print("\033[2J");
+    printf("\033[2J");
+    std::fflush(stdout);
 }
