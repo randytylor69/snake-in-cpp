@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <print>
 #include <cstdio>
+#include <vector>
 #include <chrono> // for delay
 #include <thread> // for delay
 
@@ -68,8 +69,32 @@ void Terminal::clear()
     std::fflush(stdout);
 }
 
-void Terminal::printGameOver()
+void Terminal::printGameOver(const int &score)
 {
     clear();
-    printf("Le game is Le over\n");
+    printf("Game over!\n");
+    printf("Your score: %d.\n", score);
+    printf("Press [q] to quit.\n");
+}
+	
+std::vector<std::vector<int>> Terminal::mapBorderPoints(const int &width, const int &height)
+{
+
+    for (int i=1;i<=height;i++)
+    {
+	/* print top & bottom borders */
+	if (i==1 || i==height)
+	{
+	    for (int j=1;j<=width;j++) borderPoints.push_back({j,i});
+	} else 
+	{
+	    /* print left & right borders */
+	    for (int j=1;j<=width;j++){
+		if (j==1 || j==width)
+		{
+		    borderPoints.push_back({j,i});
+		}
+	    }
+	} 
+    } return borderPoints;
 }
